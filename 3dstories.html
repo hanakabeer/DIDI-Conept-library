@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Stories</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS if needed -->
+    <style>
+        /* Main layout */
+        body {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Styling for the Timeline button */
+        .timeline-button {
+            position: fixed;
+            top: 20px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+            z-index: 10;
+            width: 150px;
+            font-family: '29LT Adir', sans-serif;
+            font-weight: 400;
+        }
+
+        .timeline-button:hover {
+            background-color: #ff9100;
+            color: #000000;
+        }
+
+        /* Main content area for iframe */
+        .iframe-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Buttons container styling */
+        .button-container {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            background-color: rgba(0, 0, 0, 0);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10;
+        }
+
+        .button-container button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #a3a3a3;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 200px;
+            font-family: '29LT Adir', sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+        }
+
+        .button-container button:hover {
+            background-color: #ff9100;
+            color: #000000;
+        }
+
+        .button-container button.selected {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* Next button styling */
+        .next-button {
+            position: fixed;
+            bottom: 18px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #f04e30;
+            color: #000000;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+            z-index: 10;
+            width: 150px;
+            font-family: '29LT Adir', sans-serif;
+            font-weight: 400;
+        }
+
+        .next-button:hover {
+            background-color: #ff9100;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Iframe container for full-screen embeds -->
+    <div class="iframe-container" id="iframeContainer">
+        <iframe id="storyIframe" src="https://my.spline.design/untitledcopy-f3a87b9f830418d282d25e673c950dd6/" frameborder="0"></iframe>
+
+        <!-- Buttons for stories positioned on the left -->
+        <div class="button-container">
+            <button id="story1" onclick="showStory('story1')">Timeless Design</button>
+            <button id="story2" onclick="showStory('story2')">Elegance in Structure</button>
+            <button id="story3" onclick="showStory('story3')">PostModern Chairs</button>
+        </div>
+    </div>
+
+    <!-- Timeline button positioned at the top right -->
+    <button class="timeline-button" onclick="location.href='index (1).html'">Timeline</button>
+
+    <!-- Next button positioned at the bottom right -->
+    <button class="next-button" onclick="nextStory()">Next</button>
+
+    <!-- JavaScript to switch stories -->
+    <script>
+        let currentStory = "story1";
+
+        function showStory(story) {
+            const iframe = document.getElementById("storyIframe");
+
+            // Update iframe source based on story selection
+            if (story === "story1") {
+                iframe.src = "https://my.spline.design/untitledcopy-f3a87b9f830418d282d25e673c950dd6/";
+            } else if (story === "story2") {
+                iframe.src = "https://my.spline.design/untitledcopycopycopy-dc4f4b737e718e70775acd31fc1f4448/";
+            } else if (story === "story3") {
+                iframe.src = "https://my.spline.design/untitledcopycopy-3c82841fbfc8557af0e920d7670ef02f/";
+            }
+
+            // Update the selected button state
+            document.querySelectorAll('.button-container button').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById(story).classList.add('selected');
+
+            currentStory = story;
+        }
+
+        function nextStory() {
+            if (currentStory === "story1") {
+                showStory("story2");
+            } else if (currentStory === "story2") {
+                showStory("story3");
+            } else {
+                showStory("story1");
+            }
+        }
+
+        // Initialize the first story as selected
+        document.getElementById(currentStory).classList.add('selected');
+    </script>
+</body>
+</html>
+

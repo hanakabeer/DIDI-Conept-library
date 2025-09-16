@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIDI Concept Library</title>
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+<body>
+    <!-- Top section with logo and search input -->
+    <div class="top-section">
+        <img src="images\Asset 2.svg" alt="DIDI Logo" class="logo">
+        
+        
+        <button id="togglebutton" onclick="open3DStories()">3D Stories</button>
+        <button id="mapboxButton" onclick="openMapboxPage()">Mapbox</button>
+
+    </div>
+
+    <!-- p5 container in the middle -->
+    <div class="p5container">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+        <script src="sketch (1).js"></script>
+        <div class="tooltip" style=" visibility: hidden; z-index: 1000;"></div>
+        <div class="expanded-tooltip">
+        <button id="closeButton" class="close-button"></button>
+        
+        <div class="content">
+            <div class="text-details">
+                <h2>Title</h2>
+                <h3>Subtitle</h3>
+                <div class="year">Year</div>
+                <div class="type">Type</div>
+                <div class="id">ID</div>
+                <div class="description">Description</div>
+                <div class="country">Country</div>
+                <!--<a class="link" href="#" target="_blank">Link</a> -->
+            </div>
+            <div class="image-container">
+                <img class="model-image" src="image.jpg" alt="Model Image" />
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Footer with filter buttons -->
+    <footer class="filter-footer">
+        <button id="filterAll" onclick="filterModels('All')" class="selected"> All</button>
+        <button id="filterCar" onclick="filterModels('Car')"> <img src="images\car.svg" alt="Car" class="filter-icon"> </button>
+        <button id="filterPlane" onclick="filterModels('Plane')"> <img src="images\plane.svg" alt="Plane" class="filter-icon"></button>
+        <button id="filterBus" onclick="filterModels('Bus')"><img src="images\bus.svg" alt="Bus" class="filter-icon"> </button>
+        <button id="filterVan" onclick="filterModels('Van')"><img src="images\van.svg" alt="Van" class="filter-icon"> </button>
+        <button id="filterCycle" onclick="filterModels('Cycle')"><img src="images\cycle.svg" alt="Cycle" class="filter-icon"></button>
+        <button id="filterChair" onclick="filterModels('Chair')"><img src="images\chair.svg" alt="Chair" class="filter-icon"></button>
+        <button id="filterHousehold" onclick="filterModels('Household')"><img src="images\household.svg" alt="Household" class="filter-icon"></button>
+        <button id="filterDevice" onclick="filterModels('Device')"><img src="images\device.svg" alt="Device" class="filter-icon"></button>
+        <button id="filterPrint" onclick="filterModels('Print')"><img src="images\print.svg" alt="Print" class="filter-icon"></button>
+        <button id="filterTinTin" onclick="filterModels('TinTin')"><img src="images\tintin.svg" alt="Tintin" class="filter-icon"></button>
+    </footer>
+
+
+    
+    
+    <script>
+         function open3DStories() {
+            window.location.href = '3DStories.html'; // Update this with the correct file name
+        }
+        function openMapboxPage() {
+            window.location.href = 'circle.html'; // Replace with the actual path to your Mapbox HTML file
+        }
+    </script>
+    
+    
+</body>
+</html>

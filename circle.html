@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Create and style clusters</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
+<style>  
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+    .timeline-button {
+    position: fixed;
+    top: 30px; /* Adjust this value if needed */
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 25px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+    width: 150px;
+    font-family: '29LT Adir', sans-serif;
+    font-weight: 500;
+}
+
+.timeline-button:hover {
+    background-color: #f04e30;
+    color: #ffffff;
+}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+ <button class="timeline-button" onclick="location.href='index (1).html'">Timeline</button>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic29maWFtYSIsImEiOiJjbTJjYm1vbDUwM3N4MmpzYjJhMHRibHI0In0.1T2YG8weQby_x9WGtmb-gg';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/sofiama/cm2kd1c46017o01pibira2u0g',
+        center: [25.276987, 55.2962499],
+        zoom: 2
+    });
+
+    map.on('load', () => {
+        map.addSource('data-points', {
+            type: 'geojson',
+            data: '/data.geojson', 
+            cluster: true,
+            clusterMaxZoom: 14, // Max zoom level for clustering
+            clusterRadius: 50 // Radius for clustering points
+        });
+
+        // Layer for clusters
+        map.addLayer({
+            id: 'clusters',
+            type: 'circle',
+            source: 'data-points',
+            filter: ['has', 'point_count'],
+            paint: {
+                'circle-color': [
+                    'step', ['get', 'point_count'],
+                    '#F04E30', 100, '#F04E30', 750, '#F04E30'
+                ],
+                'circle-radius': [
+                    'step', ['get', 'point_count'],
+                    20, 100, 30, 750, 40
+                ]
+            }
+        });
+
+        // Layer for cluster count
+        map.addLayer({
+            id: 'cluster-count',
+            type: 'symbol',
+            source: 'data-points',
+            filter: ['has', 'point_count'],
+            layout: {
+                'text-field': ['get', 'point_count_abbreviated'],
+                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                'text-size': 12
+            }
+        });
+
+        // Layer for individual points when zoomed in
+        map.addLayer({
+            id: 'unclustered-point',
+            type: 'circle',
+            source: 'data-points',
+            filter: ['!', ['has', 'point_count']],
+            
+            paint: {
+                'circle-color': '#F04E30',
+                'circle-radius': 6,
+                'circle-stroke-width': 1,
+                'circle-stroke-color': '#fff'}
+           
+        });
+         // Layer to show the name label on each unclustered point
+         map.addLayer({
+            id: 'unclustered-point-label',
+            type: 'symbol',
+            source: 'data-points',
+            filter: ['!', ['has', 'point_count']],
+            layout: {
+                'text-field': ['get', 'name'], // Display the "name" property from GeoJSON
+                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                'text-size': 10,
+                'text-offset': [0, 0.6], // Adjusts text position slightly below the circle
+                'text-anchor': 'top'
+            },
+            paint: {
+                'text-color': 'white' // Text color for better visibility
+            }
+        });
+
+        // Zoom in to show clusters as individual points
+        map.on('click', 'clusters', (e) => {
+            const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+            const clusterId = features[0].properties.cluster_id;
+            map.getSource('data-points').getClusterExpansionZoom(
+                clusterId,
+                (err, zoom) => {
+                    if (err) return;
+                    map.easeTo({
+                        center: features[0].geometry.coordinates,
+                        zoom: zoom
+                    });
+                }
+            );
+        });
+
+        // Show popup on individual point click
+        map.on('click', 'unclustered-point', (e) => {
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.description || 'No description available';
+
+            // Adjust for map projection
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML(description)
+                .addTo(map);
+        });
+
+        // Change cursor on hover
+        map.on('mouseenter', 'clusters', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'clusters', () => {
+            map.getCanvas().style.cursor = '';
+        });
+    });
+
+        // Zoom in to show clusters as individual points
+        map.on('click', 'clusters', (e) => {
+            const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+            const clusterId = features[0].properties.cluster_id;
+            map.getSource('data-points').getClusterExpansionZoom(
+                clusterId,
+                (err, zoom) => {
+                    if (err) return;
+                    map.easeTo({
+                        center: features[0].geometry.coordinates,
+                        zoom: zoom
+                    });
+                }
+            );
+        });
+
+        // Show popup on individual point click
+        map.on('click', 'unclustered-point', (e) => {
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.description || 'No description available';
+
+            // Adjust for map projection
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML(description)
+                .addTo(map);
+        });
+
+        // Change cursor on hover
+        map.on('mouseenter', 'clusters', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'clusters', () => {
+            map.getCanvas().style.cursor = '';
+        });
+    
+</script>
+
+</body>
+</html>
